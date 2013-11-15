@@ -1,0 +1,5 @@
+.idea
+bin
+jest.iml
+build/*
+!build/META-INF
