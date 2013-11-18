@@ -1,21 +1,40 @@
 package in.codef.jest;
 
-import javax.servlet.http.HttpServletRequest;
+import in.codef.jest.controller.HttpException;
+import in.codef.jest.controller.NotFound404Exception;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Controller {
 
-    Request request;
+    protected Request request;
+    protected Response response;
 
-    public void init(Request request) {
+    public Map<String, Object> dispatch(Request request, Response response) throws HttpException, ReflectiveOperationException {
+        Map<String, Object> responseParams = this.getDefaultResponseParams();
         this.request = request;
+        this.response = response;
+
+        try {
+            Method actionMethod = this.getClass().getDeclaredMethod(this.request.getActionName(), null);
+            Map<String, Object> methodResponseParams = (Map<String, Object>)actionMethod.invoke(this, null);
+            if (methodResponseParams != null) responseParams.putAll(methodResponseParams);
+
+        } catch (NoSuchMethodException e) {
+            throw new NotFound404Exception();
+        }
+
+        return responseParams;
     }
 
-    public void tellMeMoreAbout(String path) {
-        System.out.println("I'm a " + this.getClass().getName() + " and I'm being called from " + this.request.getPath());
+    public Map<String, Object> getDefaultResponseParams() {
+        return new HashMap<String, Object>();
     }
 
     @Target(value = ElementType.TYPE)

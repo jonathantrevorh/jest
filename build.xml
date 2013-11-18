@@ -50,7 +50,7 @@
                 <include name="**/*" />
             </fileset>
         </copy>
-        <copy todir="${build.dir}">
+        <copy todir="${build.dir}/views">
             <fileset dir="${web.dir}/">
                 <include name="**/*" />
             </fileset>
