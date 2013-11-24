@@ -1,7 +1,12 @@
 package in.codef.lateplates;
 
 public class JestBootstraps {
+    public static final String controllerRoot;
+    public static final boolean hotLoadEnabled = false;
 
-    public static final String[] controllerPackages = new String[] { JestBootstraps.class.getPackage().getName() + ".controllers" };
+    static {
+        String fullName = JestBootstraps.class.getName();
+        controllerRoot = fullName.substring(0, fullName.lastIndexOf(".")) + ".controllers";
+    }
 
 }
